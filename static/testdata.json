@@ -1,0 +1,459 @@
+{
+    "ocr_type": "receipts",
+    "request_id": "P_174.116.10.4_lmcrhk07_f8p",
+    "ref_no": "ocr_nodejs_123",
+    "file_name": "20230831_161401.jpg",
+    "request_received_on": 1694308420232,
+    "success": true,
+    "image_width": 4032,
+    "image_height": 2268,
+    "image_rotation": -1.573,
+    "recognition_completed_on": 1694308423025,
+    "receipts": [
+        {
+            "merchant_name": "Nepean #540",
+            "merchant_address": "849 Meriva e Road",
+            "merchant_phone": null,
+            "merchant_website": null,
+            "merchant_tax_reg_no": "121476329RT",
+            "merchant_company_reg_no": null,
+            "region": null,
+            "mall": null,
+            "country": "US",
+            "receipt_no": "003299",
+            "date": "2023-08-26",
+            "time": "15:28",
+            "items": [
+                {
+                    "amount": 25.99,
+                    "category": null,
+                    "description": "Member 111969712398",
+                    "flags": " H",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 6.39,
+                    "category": null,
+                    "description": "161552 KS QUE PASA",
+                    "flags": " H",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 10.99,
+                    "category": null,
+                    "description": "128888 VECTOR JUMBO",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 5.49,
+                    "category": null,
+                    "description": "863669 VILLAGGIO WT",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 1.89,
+                    "category": null,
+                    "description": "328795 RIVAJ NAAN",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 16.99,
+                    "category": null,
+                    "description": "1422488 GUNKEF 10066",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 24.99,
+                    "category": null,
+                    "description": "11361 BURGERS",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 5,
+                    "category": null,
+                    "description": "1769933 TPD/14364",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 14.99,
+                    "category": null,
+                    "description": "1154953 MARBLE CHEDD",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 4,
+                    "category": null,
+                    "description": "1748855 TPD/1154953",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 5.59,
+                    "category": null,
+                    "description": "MILK %",
+                    "flags": "",
+                    "qty": 458,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 17.91,
+                    "category": null,
+                    "description": "10611 SAUSAGE",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 31.66,
+                    "category": null,
+                    "description": "55503 B/S BREASTS",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 12.49,
+                    "category": null,
+                    "description": "1122924 KS CHIA",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 8.49,
+                    "category": null,
+                    "description": "1355285 IOGO VAN 2KG",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.99,
+                    "category": null,
+                    "description": "88426 CUCUMBERS",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 4.99,
+                    "category": null,
+                    "description": "5675 SPINACH",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 30.27,
+                    "category": null,
+                    "description": "31110 BACK RIBS",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 29.64,
+                    "category": null,
+                    "description": "31110 BACK RIBS",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 33.63,
+                    "category": null,
+                    "description": "31098 PORK LOIN",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 7.99,
+                    "category": null,
+                    "description": "47019 AVOCADOS 5CT",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                }
+            ],
+            "currency": "USD",
+            "total": 292.58,
+            "subtotal": 288.37,
+            "tax": 4.21,
+            "service_charge": null,
+            "tip": null,
+            "payment_method": "credit_card",
+            "payment_details": null,
+            "credit_card_type": "MASTER",
+            "credit_card_number": "9778",
+            "ocr_text": "                WN CHESALE\n             Nepean #540\n              849 Meriva e Road\n               Nepean, ON K2G1E3\n      Member 111969712398\n                                 25.99 H\n        1424970 CASHMERE TP\n         161552 KS QUE PASA       6.39 H\n         128888 VECTOR JUMBO     10.99\n         863669 VILLAGGIO WT      5.49\n         328795 RIVAJ NAAN         1.89\n        1422488 GUNKEF 10066      16.99\n          11361 BURGERS           24.99\n        1769933 TPD/14364         5.00\n        1154953 MARBLE CHEDD     14.99\n        1748855 TPD/1154953       4.00\n            458 MILK %            5.59\n          10611 SAUSAGE          17.91\n          55503 B/S BREASTS      31.66\n        1122924 KS CHIA          12.49\n        1355285 IOGO VAN 2KG      8.49\n          88426 CUCUMBERS         3.99\n           5675 SPINACH           4.99\n          31110 BACK RIBS        30.27\n          31110 BACK RIBS        29.64\n          31098 PORK LOIN        33.63\n          47019 AVOCADOS 5CT      7.99\n           SUBTOTAL             288.37\n           TAX                    4.21\n      **** TOTAL                292.58\n  XXXXXXXXXXXX9778\n  ACCT: MASTERCARD\n  REFERENCE #: 0010012990 C\n  AUTH #: 56892      2023/08/26 15:28:55\n  Invoice Number: 003299\n  Purchase - MASTERCARD\n  A0000000041010\n  0000008000 E800\n  01 APPROVED - THANK YOU 027\n  AMOUNT: 292.58\n         IMPORTANT retain this copy\n               for your records\n                CUSTOMER COPY\n          MasterCard            292.58\n          CHANGE                  0.00\n   (H) HST 13%                    4.21\n  TOTAL NUMBER OF ITEMS SOLD 19\n  TOTAL DISCOUNT (S)          $ 9.00\n  2023/08/28 15:28:57 540 3 153 196\n           22054000301532308261528\n OP#: 196 Name: Mati H (FE)\n                                             9637\n            Thank You!\n      Please Come Again\n              H-HST G-GST\n           HST/GST #121476329RT\n Whse: 540 Trm: 3 Trn 153 OP: 196\n   Items Sold: 19\n  ZH 2023/08/26 15:28",
+            "ocr_confidence": 94.49,
+            "width": 1535,
+            "height": 3690,
+            "avg_char_width": 22.1638,
+            "avg_line_height": 33.8345,
+            "conf_amount": 74,
+            "source_locations": {
+                "date": [
+                    [
+                        {
+                            "y": 1071,
+                            "x": 1826
+                        },
+                        {
+                            "y": 600,
+                            "x": 1825
+                        },
+                        {
+                            "y": 600,
+                            "x": 1864
+                        },
+                        {
+                            "y": 1071,
+                            "x": 1865
+                        }
+                    ]
+                ],
+                "total": [
+                    [
+                        {
+                            "y": 812,
+                            "x": 1601
+                        },
+                        {
+                            "y": 662,
+                            "x": 1598
+                        },
+                        {
+                            "y": 661,
+                            "x": 1632
+                        },
+                        {
+                            "y": 811,
+                            "x": 1635
+                        }
+                    ]
+                ],
+                "receipt_no": [
+                    [
+                        {
+                            "y": 1478,
+                            "x": 1881
+                        },
+                        {
+                            "y": 937,
+                            "x": 1876
+                        },
+                        {
+                            "y": 937,
+                            "x": 1912
+                        },
+                        {
+                            "y": 1478,
+                            "x": 1917
+                        }
+                    ]
+                ],
+                "credit_card_number": [
+                    [
+                        {
+                            "y": 1469,
+                            "x": 1696
+                        },
+                        {
+                            "y": 1078,
+                            "x": 1691
+                        },
+                        {
+                            "y": 1078,
+                            "x": 1724
+                        },
+                        {
+                            "y": 1469,
+                            "x": 1729
+                        }
+                    ]
+                ],
+                "subtotal": [
+                    [
+                        {
+                            "y": 812,
+                            "x": 1510
+                        },
+                        {
+                            "y": 664,
+                            "x": 1507
+                        },
+                        {
+                            "y": 663,
+                            "x": 1542
+                        },
+                        {
+                            "y": 811,
+                            "x": 1545
+                        }
+                    ]
+                ],
+                "merchant_name": [
+                    [
+                        {
+                            "y": 1248,
+                            "x": 269
+                        },
+                        {
+                            "y": 803,
+                            "x": 265
+                        },
+                        {
+                            "y": 803,
+                            "x": 300
+                        },
+                        {
+                            "y": 1248,
+                            "x": 305
+                        }
+                    ]
+                ],
+                "doc": [
+                    [
+                        {
+                            "y": 1585,
+                            "x": -26
+                        },
+                        {
+                            "y": -102,
+                            "x": -30
+                        },
+                        {
+                            "y": -113,
+                            "x": 4028
+                        },
+                        {
+                            "y": 1575,
+                            "x": 4033
+                        }
+                    ]
+                ],
+                "tax": [
+                    [
+                        {
+                            "y": 763,
+                            "x": 1554
+                        },
+                        {
+                            "y": 668,
+                            "x": 1554
+                        },
+                        {
+                            "y": 668,
+                            "x": 1586
+                        },
+                        {
+                            "y": 763,
+                            "x": 1586
+                        }
+                    ]
+                ],
+                "merchant_address": [
+                    [
+                        {
+                            "y": 1225,
+                            "x": 314
+                        },
+                        {
+                            "y": 827,
+                            "x": 306
+                        },
+                        {
+                            "y": 826,
+                            "x": 339
+                        },
+                        {
+                            "y": 1224,
+                            "x": 347
+                        }
+                    ]
+                ],
+                "merchant_tax_reg_no": [
+                    [
+                        {
+                            "y": 1056,
+                            "x": 3392
+                        },
+                        {
+                            "y": 755,
+                            "x": 3393
+                        },
+                        {
+                            "y": 755,
+                            "x": 3443
+                        },
+                        {
+                            "y": 1056,
+                            "x": 3442
+                        }
+                    ]
+                ]
+            }
+        }
+    ]
+}
