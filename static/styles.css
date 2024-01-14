@@ -1,0 +1,119 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+    background-color: azure;
+}
+
+.btn {
+    margin: 10px;
+}
+.hidden {
+    display: none;
+}
+
+#receiptfile-label {
+    margin: auto;
+    padding: 10%;
+    font-size: 200px;
+    border-radius: 20px;
+    border: 10px solid;
+}
+#receiptfile {
+    display: none;
+}
+
+#data-table {
+    padding: 20px;
+    color: darkslategray;
+}
+#table {
+    margin: auto;
+}
+
+/* Define vars we'll be using */
+:root {
+  --brand-success: #5cb85c;
+  --loader-size: 20em;
+  --check-height: calc(var(--loader-size) / 2);
+  --check-width: calc(var(--check-height) / 2);
+  --check-left: calc(var(--loader-size) / 6 + var(--loader-size) / 12);
+  --check-thickness: 10px;
+  --check-color: var(--brand-success);
+}
+
+.circle-loader {
+  margin-top: 15%;
+  margin-bottom: calc(var(--loader-size) / 2);
+  border: 10px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--check-color);
+  animation: loader-spin 1.2s infinite linear;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  width: var(--loader-size);
+  height: var(--loader-size);
+}
+
+.load-complete {
+  -webkit-animation: none;
+  animation: none;
+  border-color: var(--check-color);
+  transition: border 500ms ease-out;
+}
+
+.checkmark {
+  display: none;
+}
+
+.checkmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg);
+}
+
+.checkmark:after {
+  opacity: 1;
+  height: var(--check-height);
+  width: var(--check-width);
+  transform-origin: left top;
+  border-right: var(--check-thickness) solid var(--check-color);
+  border-top: var(--check-thickness) solid var(--check-color);
+  content: "";
+  left: var(--check-left);
+  top: var(--check-height);
+  position: absolute;
+}
+
+@keyframes loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: var(--check-width);
+    opacity: 1;
+  }
+  40% {
+    height: var(--check-height);
+    width: var(--check-width);
+    opacity: 1;
+  }
+  100% {
+    height: var(--check-height);
+    width: var(--check-width);
+    opacity: 1;
+  }
+}
