@@ -15,6 +15,13 @@
         
         <div id="data-table" class="hidden">
             <h1>Receipt Data</h1>
+            <div id="date-credit-card-container">
+                <label id="date-label" for="date-input">Date: </label>
+                <input type="date" id="date-input">
+
+                <label id="credit-card-label" for="credit-card-input">Credit Card #:</label>
+                <input type="text" pattern="[0-9] {4}" id="credit-card-input">
+            </div>
             <table id="table" border="1">
             <tr>
                 <th style="padding: 5px;">Item</th>

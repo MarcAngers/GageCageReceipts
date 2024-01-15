@@ -80,7 +80,14 @@ function formatReceiptData(data) {
             items[i-1].amount -= Math.abs(items[i].amount);
             delete items[i];
         } else {
+            // Remove digist from the item name to get rid of long item codes (messes with a few items like 2% milk, but I think its fine)
             items[i].description = items[i].description.replace(/[0-9]/g, '');
+
+            // Some custom logic to handle Loblaws receipts, they don't make it through the OCR perfectly so this should help
+            if (items[i].description.includes("HMRJ")) {
+                items[i].description = items[i].description.replace("HMRJ", "");
+            }
+            items[i].description = items[i].description.replace(" MRJ", "");
             
             // Remove unnecessary data from the item list
             delete items[i].qty;
@@ -97,6 +104,19 @@ function formatReceiptData(data) {
 }
 
 function generateTable(data) {
+    var dateInput = document.getElementById("date-input");
+    dateInput.value = data.date;
+    dateInput.addEventListener("change", function() {
+        var newValue = this.value;
+        data.date = newValue;
+    });
+    var CCInput = document.getElementById("credit-card-input");
+    CCInput.value = data.credit_card_number;
+    CCInput.addEventListener("change", function() {
+        var newValue = this.value;
+        data.credit_card_number = newValue;
+    });
+    
     var table = document.getElementById("table");
     // Loop through the items array
     for (var i = 0; i < data.items.length; i++) {

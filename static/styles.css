@@ -29,6 +29,16 @@ html {
 #table {
     margin: auto;
 }
+#date-credit-card-container {
+    margin: 10px;
+    padding: 10px 10px 0px 10px;
+}
+#date-input {
+  margin-right: 20px;
+}
+#credit-card-input {
+    width: 50px;
+}
 
 /* Define vars we'll be using */
 :root {
