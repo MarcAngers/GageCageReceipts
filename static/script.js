@@ -1,5 +1,5 @@
 window.onload = function() {
-    var __DEBUG__ = true;
+    var __DEBUG__ = false;
     var receiptData;
 
     document.getElementById("receiptfile").addEventListener('change', function() {
