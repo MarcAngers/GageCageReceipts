@@ -164,7 +164,7 @@ function record_data(data) {
 
     // Add receipt data to the relevant sheet
     // Add receipt totals
-    let nextRow = populatedRowsForColumn(sheet, "A") + 6;
+    let nextRow = populatedRowsForColumn(sheet, "A") + 8;
     let values = [];
     values[0] = [
       data.date,
@@ -178,12 +178,12 @@ function record_data(data) {
 
 
     // Add receipt data
-    for (var i = 0; i < Object.keys(data.items).length; i++) {  
-      if (data.items[i] == null)
+    for (var key in data.items) {  
+      if (data.items[key] == null)
         continue;
             
       let nextRow = populatedRowsForColumn(sheet, "K") + 3;
-      let formattedData = formatLineData(data.items[i], data.date);
+      let formattedData = formatLineData(data.items[key], data.date);
       let values = [];
       let itemName = Object.values(formattedData)[1];
       values[0] = [

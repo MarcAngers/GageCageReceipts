@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="../static/script.js"></script>
-    <link rel="stylesheet" href="../static/styles.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <head>
+        <link rel="icon" href="../static/favicon.ico">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="../static/script.js"></script>
+        <link rel="stylesheet" href="../static/styles.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    </head>
 
     <body style="color: lightslategray; background-color: azure;">
         <div id="receiptfile-container" class="">
@@ -11,6 +14,10 @@
 
             <label id="receiptfile-label" for="receiptfile" class="glyphicon glyphicon-camera"></label>
             <input type="file" id="receiptfile" accept="image/*" capture>
+
+            <div id="manual-entry-container">
+                <button id="manual-entry" class="btn btn-light">Manual Entry</button>
+            </div>
         </div>
         
         <div id="data-table" class="hidden">
@@ -29,6 +36,10 @@
                 <th style="padding: 5px;">Taxed</th>
             </tr>
             </table>
+            <div id="total-container">
+                <label id="total-label" for="total-input">Total: </label>
+                <input type="total" id="total-input">
+            </div>
 
             <button id="add-row" class="btn btn-light">Add a row</button>
             <div id="upload-container">
@@ -40,4 +51,7 @@
             <div class="checkmark draw"></div>
         </div>
     </body>
+    <footer>
+        <a href="https://docs.google.com/spreadsheets/d/1FD-jWAkq4_Bz9g6L5EzygkOfGZ02Un1AdxbCW_PTVUM/edit#gid=866715370">Link to Google Sheet</a>
+    </footer>
 </html>
