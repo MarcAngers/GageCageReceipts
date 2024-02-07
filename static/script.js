@@ -117,15 +117,17 @@ function formatReceiptData(data) {
                 delete items[i];
             } else {
                 // Remove digist from the item name to get rid of long item codes (messes with a few items like 2% milk, but I think its fine)
-                items[i].description = items[i].description.replace(/[0-9]/g, '');
+                items[i].description = items[i].description.replace(/[0-9\(\)]/g, '');
                 // Now remove any preceding spaces in the item name
                 items[i].description = items[i].description.trimStart();
 
                 // Some custom logic to handle Loblaws receipts, they don't make it through the OCR perfectly so this should help
                 if (items[i].description.includes("HMRJ")) {
                     items[i].description = items[i].description.replace("HMRJ", "");
+                    items[i].flags = "H";
                 }
                 items[i].description = items[i].description.replace("MRJ", "");
+                items[i].description = items[i].description.replace("MR.J", "");
                 
                 // Remove unnecessary data from the item list
                 delete items[i].qty;
@@ -366,9 +368,14 @@ function checkDate(receiptDate) {
 
 function updateCalculatedSum(items) {
     let sum = 0;
+
     for (i in items) {
-        sum += items[i].amount;
+        multiplier = 1;
+        if (items[i].flags)
+            multiplier = 1.13;
+
+        sum += items[i].amount * multiplier;
     }
 
-    document.getElementById("calculated-sum").innerHTML = sum;
+    document.getElementById("calculated-sum").innerHTML = sum.toFixed(2);
 }
