@@ -1,0 +1,261 @@
+{
+    "ocr_type": "receipts",
+    "request_id": "P_174.116.10.4_ls9zqfj4_h2f",
+    "ref_no": "ocr_nodejs_123",
+    "file_name": "20240110_210220.jpg",
+    "request_received_on": 1707201566753,
+    "success": true,
+    "image_width": 4032,
+    "image_height": 2268,
+    "image_rotation": -1.572,
+    "recognition_completed_on": 1707201569015,
+    "receipts": [
+        {
+            "merchant_name": "LOBLAWS COLLEGE SQUARE",
+            "merchant_address": null,
+            "merchant_phone": "+1 613-723-3200",
+            "merchant_website": null,
+            "merchant_tax_reg_no": "12223-5922",
+            "merchant_company_reg_no": null,
+            "region": null,
+            "mall": null,
+            "country": "US",
+            "receipt_no": "010224 164905 6317 01050",
+            "date": "2002-01-24",
+            "time": "16:49",
+            "items": [
+                {
+                    "amount": 9.49,
+                    "description": "TROP LOTS PULP",
+                    "flags": ""
+                },
+                {
+                    "amount": 5.89,
+                    "description": "NEILSON % LT",
+                    "flags": ""
+                },
+                {
+                    "amount": 3.49,
+                    "description": "ROMAINE LETT",
+                    "flags": ""
+                },
+                {
+                    "amount": 2.14,
+                    "description": "ROLL KAISERMR.J",
+                    "flags": ""
+                },
+                null,
+                {
+                    "amount": 2.14,
+                    "description": "KAISER ROLLS",
+                    "flags": ""
+                },
+                null,
+                {
+                    "amount": 4.99,
+                    "description": "ACE HARVEST GRAI",
+                    "flags": ""
+                }
+            ],
+            "currency": "USD",
+            "total": 28.14,
+            "subtotal": 28.14,
+            "tax": null,
+            "service_charge": null,
+            "tip": null,
+            "payment_method": null,
+            "payment_details": null,
+            "credit_card_type": "CREDIT",
+            "credit_card_number": "6751",
+            "ocr_text": "              Loblaws\n   LOBLAWS COLLEGE SQUARE\n   (613) 723-3200\n   Welcome #\n   22-DAIRY\n     04850001834 TROP LOTS PULP           MRJ     9.49\n     06680000015 NEILSON 2% 4LT           MRJ     5.89\n   27-PRODUCE\n     4640          ROMAINE LETT           MRJ 3.49\n   33-BAKERY INSTORE\n     2500780       ROLL KAISER            MR.J    4.29\n       ARCP: 50.00% ($4.29)                      -2.15\n    2560130        KAISER ROLLS           MRJ     4.29\n      ARCP: 50.00% ($4.29)                       -2.15\n    62855301981    ACE HARVEST GRAI         MRJ 4.99\n  SUBTOTAL                                    28.14\n  TOTAL                                       28.14\n  Trans. Type: PURCHASE\n  Account: VISA                 CAD$ 28 14\n  Card Type: CREDIT\n  Card Number:    ************ 6751 P\n  DateTime:       24/01/02 16:49:20\n  Ref.#:          126292\n  Auth:           076593\n  VISA CREDIT\n 80000000031010 0000000000\n         00 APPROVED - THANK YOU\n      Retain this copy for statement\n                validation\n          *** CUSTOMER COPY ***\n     CREDIT TN                                    28.14\n ********** Your Savings Today *********\n Total Savings                                       4.30\n PC Optimum\n Points Redeemed                                        0\n Closing Balance                                     2455\n                99105005631720240102164927\n            You could have earned at leist 280\n                 PC Optimum points with a\n      PC Financial Mastercard or PC Moley Account.\n               Learn more at pcfinancia.ca\n *****                          *********\n                      GST # 12223-5922 RT0001\n YOUR STORE MANAGER\n Manuel Smiley\n CLICK COLLECT\n Shop online.Pick up at store.\n Visit shop.loblaus.ca to learn more\n 2024/01/02 225 225                     05 6317 16:49\n *******\n   TELL US HOW WE DID TODAY! VISIT\n     WWW.STOREOPINION.CA OR CALL\n  1-800-531-2928. WIN 1 of 2 MONTHLY\n PRIZES OF 1 MILLION PC OPTIMUM POINTS\n   OR $1000 IN PC GIFT CARDS. SEE\n    WWW.STOREOPINION.CA FOR FULL\n    CONTEST RULES. STORE: 01050\n  CODE: 010224 164905 6317 01050\n ******                     *****",
+            "ocr_confidence": 95.46,
+            "width": 1435,
+            "height": 3845,
+            "avg_char_width": 25.6474,
+            "avg_line_height": 45.8663,
+            "conf_amount": 74,
+            "source_locations": {
+                "date": [
+                    [
+                        {
+                            "y": 1409,
+                            "x": 1765
+                        },
+                        {
+                            "y": 965,
+                            "x": 1765
+                        },
+                        {
+                            "y": 965,
+                            "x": 1812
+                        },
+                        {
+                            "y": 1409,
+                            "x": 1812
+                        }
+                    ]
+                ],
+                "total": [
+                    [
+                        {
+                            "y": 720,
+                            "x": 1465
+                        },
+                        {
+                            "y": 470,
+                            "x": 1456
+                        },
+                        {
+                            "y": 469,
+                            "x": 1500
+                        },
+                        {
+                            "y": 719,
+                            "x": 1509
+                        }
+                    ]
+                ],
+                "receipt_no": [
+                    [
+                        {
+                            "y": 1658,
+                            "x": 3888
+                        },
+                        {
+                            "y": 989,
+                            "x": 3887
+                        },
+                        {
+                            "y": 989,
+                            "x": 3938
+                        },
+                        {
+                            "y": 1658,
+                            "x": 3939
+                        }
+                    ]
+                ],
+                "credit_card_number": [
+                    [
+                        {
+                            "y": 1816,
+                            "x": 1664
+                        },
+                        {
+                            "y": 1338,
+                            "x": 1664
+                        },
+                        {
+                            "y": 1338,
+                            "x": 1713
+                        },
+                        {
+                            "y": 1816,
+                            "x": 1714
+                        }
+                    ]
+                ],
+                "subtotal": [
+                    [
+                        {
+                            "y": 721,
+                            "x": 1361
+                        },
+                        {
+                            "y": 472,
+                            "x": 1356
+                        },
+                        {
+                            "y": 471,
+                            "x": 1405
+                        },
+                        {
+                            "y": 720,
+                            "x": 1410
+                        }
+                    ]
+                ],
+                "merchant_name": [
+                    [
+                        {
+                            "y": 1792,
+                            "x": 392
+                        },
+                        {
+                            "y": 1242,
+                            "x": 397
+                        },
+                        {
+                            "y": 1242,
+                            "x": 445
+                        },
+                        {
+                            "y": 1792,
+                            "x": 440
+                        }
+                    ]
+                ],
+                "doc": [
+                    [
+                        {
+                            "y": 1916,
+                            "x": -49
+                        },
+                        {
+                            "y": 337,
+                            "x": -52
+                        },
+                        {
+                            "y": 331,
+                            "x": 4178
+                        },
+                        {
+                            "y": 1910,
+                            "x": 4180
+                        }
+                    ]
+                ],
+                "merchant_phone": [
+                    [
+                        {
+                            "y": 1779,
+                            "x": 438
+                        },
+                        {
+                            "y": 1433,
+                            "x": 447
+                        },
+                        {
+                            "y": 1434,
+                            "x": 496
+                        },
+                        {
+                            "y": 1780,
+                            "x": 486
+                        }
+                    ]
+                ],
+                "merchant_tax_reg_no": [
+                    [
+                        {
+                            "y": 1148,
+                            "x": 3065
+                        },
+                        {
+                            "y": 875,
+                            "x": 3062
+                        },
+                        {
+                            "y": 874,
+                            "x": 3117
+                        },
+                        {
+                            "y": 1147,
+                            "x": 3120
+                        }
+                    ]
+                ]
+            }
+        }
+    ]
+}

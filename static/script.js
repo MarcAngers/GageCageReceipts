@@ -1,5 +1,7 @@
 window.onload = function() {
-    var __DEBUG__ = false;
+    // Enable debug mode for local development
+    var hostname = window.location.hostname;
+    var __DEBUG__ = (hostname === "localhost" || hostname === "127.0.0.1");
     var receiptData;
 
     document.getElementById("receiptfile").addEventListener('change', function() {
@@ -7,9 +9,10 @@ window.onload = function() {
         $(".circle-loader").toggleClass("hidden");
 
         if (__DEBUG__) {
-            fetch('./static/testdata.json')
+            fetch('./static/testdata-loblaws.json')
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 receiptData = formatReceiptData(data);
                 console.log(receiptData);
                 generateTable(receiptData);
@@ -34,7 +37,6 @@ window.onload = function() {
             .then(response => response.json())
             .then(data => {
                 receiptData = formatReceiptData(data);
-                console.log(receiptData);
                 generateTable(receiptData);
                 document.getElementById("data-table").classList.toggle("hidden");
                 $(".circle-loader").toggleClass("hidden");
@@ -52,20 +54,29 @@ window.onload = function() {
     });
 
     document.getElementById("upload").addEventListener("click", function() {
-        // Send receipt data to the google sheets web app
-        request = $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbyHfpCOa3usT6Uqhqas99jTTNutsGFCy7F_eoSeMHHO_r13e4r6HXwG_3e8-fykFZS4DQ/exec",
-            type: "post",
-            data: receiptData,
-            beforeSend: function() {
-                document.getElementById("data-table").classList.toggle("hidden");
-                $(".circle-loader").toggleClass("hidden");
-            },
-            success: function() {
-                $('.circle-loader').toggleClass('load-complete');
-                $('.checkmark').toggle();
+        if (__DEBUG__) {
+            if (checkDate(receiptData.date)) {
+                console.log(receiptData);
+            } else {
+                if (confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?")) {
+                    console.log(receiptData);
+                } else {
+                    return;
+                }
             }
-        });
+            document.getElementById("data-table").classList.toggle("hidden");
+            $(".circle-loader").toggleClass("hidden");
+        } else {
+            if (checkDate(receiptData.date)) {
+                sendToSheet(receiptData);
+            } else {
+                if (confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?")) {
+                    sendToSheet(receiptData);
+                } else {
+                    return;
+                }
+            }
+        }
     });
 
     document.getElementById("add-row").addEventListener("click", function() {
@@ -82,12 +93,23 @@ function formatReceiptData(data) {
         formattedData.credit_card_number = "XXXX"
         formattedData.items = [];
     } else {
-        formattedData.date = data.receipts[0].date;
+        if (data.receipts[0].merchant_name.includes("LOBLAWS")) {   // Loblaws does dates backwards smh
+            var DMY = data.receipts[0].date.split("-");
+            formattedData.date = "20" + DMY[2]                     // Will need to change this in the year 2100 ;-;
+                + "-" + DMY[1]
+                + "-" + DMY[0].slice(-2);
+        } else {
+            formattedData.date = data.receipts[0].date;
+        }
         formattedData.total = data.receipts[0].total;
         formattedData.credit_card_number = data.receipts[0].credit_card_number;
         
         var items = data.receipts[0].items;
         for (let i = 0; i < items.length; i++) {
+            if (items[i] == null) {
+                continue;
+            }
+
             // Account for line items corresponding to a sale/discount
             if (items[i].amount < 0 || items[i].description.includes("TPD/")) {
                 // Discount the previous item and remove the sale from the items list
@@ -114,7 +136,7 @@ function formatReceiptData(data) {
             }
         }
 
-        formattedData.items = items;
+        formattedData.items = items.filter(n => n); // Remove null values (sale items) from receipt data
     }
     
     return formattedData;
@@ -176,6 +198,8 @@ function generateTable(data) {
                 var newValue = parseFloat(this.value);
                 // Update the JSON data
                 data.items[index].amount = newValue;
+
+                updateCalculatedSum(data.items);
             });
             // Append the input to the cell
             amountCell.appendChild(amountInput);
@@ -223,6 +247,8 @@ function generateTable(data) {
         var newValue = this.value;
         data.total = newValue;
     });
+
+    updateCalculatedSum(data.items);
 }
 
 function addRow(data) {
@@ -235,10 +261,9 @@ function addRow(data) {
 
     // Add an event listener to update the JSON data when the input changes
     descInput.addEventListener("change", function() {
-        var index = this.parentNode.parentNode.rowIndex + 1;
+        var index = this.parentNode.parentNode.rowIndex - 1;
         var newValue = this.value;
         data.items[index].description = newValue;
-        console.log(data);
     });
 
     // Append the input to the cell
@@ -254,13 +279,12 @@ function addRow(data) {
     // Add an event listener to update the JSON data when the input changes
     amountInput.addEventListener("change", function() {
         // Get the index of the row
-        var index = this.parentNode.parentNode.rowIndex + 1;
+        var index = this.parentNode.parentNode.rowIndex - 1;
         // Get the new value
         var newValue = parseFloat(this.value);
         // Update the JSON data
         data.items[index].amount = newValue;
-        // Log the updated JSON data
-        console.log(data);
+        updateCalculatedSum(data.items);
     });
     // Append the input to the cell
     amountCell.appendChild(amountInput);
@@ -286,13 +310,11 @@ function addRow(data) {
     // Add an event listener to update the JSON data when the input changes
     flagsSelect.addEventListener("change", function() {
         // Get the index of the row
-        var index = this.parentNode.parentNode.rowIndex + 1;
+        var index = this.parentNode.parentNode.rowIndex - 1;
         // Get the new value
         var newValue = this.value;
         // Update the JSON data
         data.items[index].flags = newValue;
-        // Log the updated JSON data
-        console.log(data);
     });
     // Append the select input to the cell
     flagsCell.appendChild(flagsSelect);
@@ -309,4 +331,44 @@ function addRow(data) {
 
     data.items.push(newItem);
     console.log(data);
+}
+
+function sendToSheet(data) {
+    // Send receipt data to the google sheets web app
+    request = $.ajax({
+        url: "https://script.google.com/macros/s/AKfycbyHfpCOa3usT6Uqhqas99jTTNutsGFCy7F_eoSeMHHO_r13e4r6HXwG_3e8-fykFZS4DQ/exec",
+        type: "post",
+        data: data,
+        beforeSend: function() {
+            document.getElementById("data-table").classList.toggle("hidden");
+            $(".circle-loader").toggleClass("hidden");
+        },
+        success: function() {
+            $('.circle-loader').toggleClass('load-complete');
+            $('.checkmark').toggle();
+        }
+    });
+}
+
+function checkDate(receiptDate) {
+    let date = new Date(receiptDate);
+    let today = new Date();
+
+    // get the difference between the two dates in milliseconds
+    let diff = Math.abs(date - today);
+
+    // convert the difference to days
+    let days = diff / (1000 * 60 * 60 * 24);
+
+    // check if the difference is within 150 days
+    return days <= 150;
+}
+
+function updateCalculatedSum(items) {
+    let sum = 0;
+    for (i in items) {
+        sum += items[i].amount;
+    }
+
+    document.getElementById("calculated-sum").innerHTML = sum;
 }

@@ -1,0 +1,239 @@
+{
+    "ocr_type": "receipts",
+    "request_id": "P_174.116.10.4_lsa24eut_it",
+    "ref_no": "ocr_nodejs_123",
+    "file_name": "20230831_161413.jpg",
+    "request_received_on": 1707205578294,
+    "success": true,
+    "image_width": 4032,
+    "image_height": 2268,
+    "image_rotation": -1.577,
+    "recognition_completed_on": 1707205581258,
+    "receipts": [
+        {
+            "merchant_name": "metro",
+            "merchant_address": null,
+            "merchant_phone": "+1 613-274-7274",
+            "merchant_website": null,
+            "merchant_tax_reg_no": null,
+            "merchant_company_reg_no": null,
+            "region": null,
+            "mall": null,
+            "country": "US",
+            "receipt_no": "001000078545",
+            "date": "2023-08-26",
+            "time": "15:48",
+            "items": [
+                {
+                    "amount": 4.99,
+                    "description": "ROMAINE HEART",
+                    "flags": ""
+                },
+                {
+                    "amount": 1.8,
+                    "description": "PREMIUM BANANA",
+                    "flags": ""
+                },
+                {
+                    "amount": 3.99,
+                    "description": "GREEN KALE",
+                    "flags": ""
+                },
+                {
+                    "amount": 3.59,
+                    "description": "HAM BUNS",
+                    "flags": ""
+                },
+                {
+                    "amount": 3.99,
+                    "description": "LARGE KAISER ROL",
+                    "flags": ""
+                },
+                {
+                    "amount": 3.69,
+                    "description": "FSB FRENCH BAGUE",
+                    "flags": ""
+                }
+            ],
+            "currency": "USD",
+            "total": 34.03,
+            "subtotal": 34.03,
+            "tax": null,
+            "service_charge": null,
+            "tip": null,
+            "payment_method": null,
+            "payment_details": null,
+            "credit_card_type": "CREDIT",
+            "credit_card_number": "9778",
+            "ocr_text": "              metro\n          Store #100272 (613)274-7274\n          E & DE HST# R105216170\n  PRODUCE\n     (2) ASSORTED COLOR S\n      2 @$5.99\n                                       11.98\n    ROMAINE HEART\n                                        4.99\n     Saving 1.00\n    PREMIUM BANANA\n      1.185 kg @ $1.52/                 1.80\n    GREEN KALE                          3.99\n  SERV BAKERY\n    HAM BUNS                            3.59\n    LARGE KAISER ROL                    3.99\n    FSB FRENCH BAGUE                    3.69\n  SUBTOTAL                        34.03\n TOTAL                            34.03\n     CREDIT CR                         34.03\n Total number of items sold =      8\n ****** Your savings today ******\n Promotional discounts                  1.00\n Total of your savings                  1.00\n AIR MILES\n AN AIR MILES HINT,\n YOU WOULD HAVE RECEIVED 1 POINTS,\n VISIT US AT METRO.CA\n  RETAIN RECEIPT FOR PRODUCT RETURN\n WITHIN 14 DAYS. SEE STORE FOR DETAILS.\n  *CUSTOMER CARE NUMBER 1-877-763-7374*\n          *** metro.ca ***\n        How did we do? Tell us at\n    METROSURVEY.CA for a chance to win\n $1000 IN FREE GROCERIES. Monthly winners\n                Your code\n     13400857033290120020\n METRO #272\n 1705 MERIVALE RD\n OTTAWA         ON\n            Aug 26 2023 15:48\n            TRANSACTION RECORD\n                  CREDIT\n Trans#            001000078545\n Card Number                **** 9778 **/** P\n AID            : A0000000041010\n APP            : MASTERCARD\n Trans. Type    : PURCHASE\n Sequence #     : 109819\n Response Code: 00\n Auth #          : 04239Z\n TUR                0000008001\n Total           : CAD$ 34.03\n           APPROVED -THANK YOU\n Keep this copy for your records\n           *** CUSTOMER COPY *\n 08/26/2023                          03:48 PM\n Cashier 112                   100272 01 0097",
+            "ocr_confidence": 96.81,
+            "width": 1101,
+            "height": 3775,
+            "avg_char_width": 24.8686,
+            "avg_line_height": 38.9543,
+            "conf_amount": 74,
+            "source_locations": {
+                "date": [
+                    [
+                        {
+                            "y": 1371,
+                            "x": 2647
+                        },
+                        {
+                            "y": 903,
+                            "x": 2644
+                        },
+                        {
+                            "y": 903,
+                            "x": 2702
+                        },
+                        {
+                            "y": 1370,
+                            "x": 2704
+                        }
+                    ]
+                ],
+                "total": [
+                    [
+                        {
+                            "y": 834,
+                            "x": 1212
+                        },
+                        {
+                            "y": 579,
+                            "x": 1212
+                        },
+                        {
+                            "y": 579,
+                            "x": 1250
+                        },
+                        {
+                            "y": 834,
+                            "x": 1250
+                        }
+                    ]
+                ],
+                "receipt_no": [
+                    [
+                        {
+                            "y": 1186,
+                            "x": 2898
+                        },
+                        {
+                            "y": 864,
+                            "x": 2893
+                        },
+                        {
+                            "y": 863,
+                            "x": 2933
+                        },
+                        {
+                            "y": 1185,
+                            "x": 2939
+                        }
+                    ]
+                ],
+                "credit_card_number": [
+                    [
+                        {
+                            "y": 1206,
+                            "x": 2803
+                        },
+                        {
+                            "y": 1042,
+                            "x": 2798
+                        },
+                        {
+                            "y": 1041,
+                            "x": 2837
+                        },
+                        {
+                            "y": 1205,
+                            "x": 2842
+                        }
+                    ]
+                ],
+                "subtotal": [
+                    [
+                        {
+                            "y": 834,
+                            "x": 1123
+                        },
+                        {
+                            "y": 579,
+                            "x": 1121
+                        },
+                        {
+                            "y": 579,
+                            "x": 1155
+                        },
+                        {
+                            "y": 834,
+                            "x": 1157
+                        }
+                    ]
+                ],
+                "merchant_name": [
+                    [
+                        {
+                            "y": 1320,
+                            "x": 149
+                        },
+                        {
+                            "y": 805,
+                            "x": 198
+                        },
+                        {
+                            "y": 816,
+                            "x": 312
+                        },
+                        {
+                            "y": 1331,
+                            "x": 262
+                        }
+                    ]
+                ],
+                "doc": [
+                    [
+                        {
+                            "y": 1703,
+                            "x": -41
+                        },
+                        {
+                            "y": 492,
+                            "x": -48
+                        },
+                        {
+                            "y": 468,
+                            "x": 4104
+                        },
+                        {
+                            "y": 1679,
+                            "x": 4111
+                        }
+                    ]
+                ],
+                "merchant_phone": [
+                    [
+                        {
+                            "y": 1079,
+                            "x": 377
+                        },
+                        {
+                            "y": 745,
+                            "x": 406
+                        },
+                        {
+                            "y": 750,
+                            "x": 459
+                        },
+                        {
+                            "y": 1084,
+                            "x": 430
+                        }
+                    ]
+                ]
+            }
+        }
+    ]
+}
