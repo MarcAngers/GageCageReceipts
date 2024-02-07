@@ -36,9 +36,7 @@ window.onload = function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 receiptData = formatReceiptData(data);
-                console.log(receiptData);
                 generateTable(receiptData);
                 document.getElementById("data-table").classList.toggle("hidden");
                 $(".circle-loader").toggleClass("hidden");
@@ -49,7 +47,6 @@ window.onload = function() {
 
     document.getElementById("manual-entry").addEventListener("click", function() {
         receiptData = formatReceiptData(null);
-        console.log(receiptData);
         generateTable(receiptData);
         addRow(receiptData);
         document.getElementById("receiptfile-container").classList.toggle("hidden");
@@ -255,7 +252,6 @@ function generateTable(data) {
 }
 
 function addRow(data) {
-    console.log(data);
     var table = document.getElementById("table");
     var row = document.createElement("tr");
     var descCell = document.createElement("td");
@@ -266,7 +262,6 @@ function addRow(data) {
     // Add an event listener to update the JSON data when the input changes
     descInput.addEventListener("change", function() {
         var index = this.parentNode.parentNode.rowIndex - 1;
-        console.log("index: ", index);
         var newValue = this.value;
         data.items[index].description = newValue;
     });
@@ -320,8 +315,6 @@ function addRow(data) {
         var newValue = this.value;
         // Update the JSON data
         data.items[index].flags = newValue;
-        // Log the updated JSON data
-        console.log(data);
     });
     // Append the select input to the cell
     flagsCell.appendChild(flagsSelect);
