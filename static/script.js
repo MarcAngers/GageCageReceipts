@@ -232,6 +232,7 @@ function generateTable(data) {
                 var newValue = this.value;
                 // Update the JSON data
                 data.items[index].flags = newValue;
+                updateCalculatedSum(data.items);
             });
             // Append the select input to the cell
             flagsCell.appendChild(flagsSelect);
@@ -317,6 +318,7 @@ function addRow(data) {
         var newValue = this.value;
         // Update the JSON data
         data.items[index].flags = newValue;
+        updateCalculatedSum(data.items);
     });
     // Append the select input to the cell
     flagsCell.appendChild(flagsSelect);
