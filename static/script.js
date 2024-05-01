@@ -54,27 +54,26 @@ window.onload = function() {
     });
 
     document.getElementById("upload").addEventListener("click", function() {
-        if (__DEBUG__) {
-            if (checkDate(receiptData.date)) {
+        // Maybe turn this into an array to loop through if there ends up being more confirmations to check
+        let dateCheckConfirm = false, totalsCheckConfirm = false, emptyFieldCheckConfirm = false;
+
+        if (!checkDate(receiptData.date)) {
+            dateCheckConfirm = confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?");
+        }
+        if (!checkTotals(receiptData)) {
+            totalsCheckConfirm = confirm("The calculated total doesn't match the total from the receipt! Are you sure you want to add this data?");
+        }
+        if (!checkForEmptyFields()) {
+            emptyFieldCheckConfirm = confirm("There are empty fields in your receipt data! Are you sure you want to add an empty field?");
+        }
+
+        if  (dateCheckConfirm && totalsCheckConfirm) {
+            if (__DEBUG__) {
                 console.log(receiptData);
+                document.getElementById("data-table").classList.toggle("hidden");
+                $(".circle-loader").toggleClass("hidden");
             } else {
-                if (confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?")) {
-                    console.log(receiptData);
-                } else {
-                    return;
-                }
-            }
-            document.getElementById("data-table").classList.toggle("hidden");
-            $(".circle-loader").toggleClass("hidden");
-        } else {
-            if (checkDate(receiptData.date)) {
                 sendToSheet(receiptData);
-            } else {
-                if (confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?")) {
-                    sendToSheet(receiptData);
-                } else {
-                    return;
-                }
             }
         }
     });
@@ -93,7 +92,7 @@ function formatReceiptData(data) {
         formattedData.credit_card_number = "XXXX"
         formattedData.items = [];
     } else {
-        if (data.receipts[0].merchant_name.includes("LOBLAWS")) {   // Loblaws does dates backwards smh
+        if (data.receipts[0].merchant_name.includes("LOBLAWS")) {   // Loblaws does dates backwards smh, hardcoding a solution
             var DMY = data.receipts[0].date.split("-");
             formattedData.date = "20" + DMY[2]                     // Will need to change this in the year 2100 ;-;
                 + "-" + DMY[1]
@@ -232,11 +231,44 @@ function generateTable(data) {
                 var newValue = this.value;
                 // Update the JSON data
                 data.items[index].flags = newValue;
+                updateCalculatedSum(data.items);
             });
             // Append the select input to the cell
             flagsCell.appendChild(flagsSelect);
             // Append the cell to the row
             row.appendChild(flagsCell);
+
+            // Create a cell for the delete row button
+            var deleteCell = document.createElement("td");
+            deleteCell.classList.add("delete-cell");
+            // Create icon for the delete row button
+            var deleteSpan = document.createElement("span");
+            deleteSpan.classList.add("glyphicon");
+            deleteSpan.classList.add("glyphicon-trash");
+            // Add an event listener to delete the row when clicked
+            deleteSpan.addEventListener("click", function() {              
+                let node = this.parentNode.parentNode;
+                node.style.color = "red";
+
+                setTimeout(function(node) {
+                    if (confirm("Are you sure you want to delete the selected row?")) {
+                        // Get the index of the row
+                        var index = node.rowIndex - 1;
+                        
+                        // Delete row
+                        data.items.splice(index, 1);
+                        node.remove();
+
+                        updateCalculatedSum(data.items);
+                    } else {
+                        node.style.color = "";
+                    }
+                }, 0, node);
+            });
+            // Append the select input to the cell
+            deleteCell.appendChild(deleteSpan);
+            // Append the cell to the row
+            row.appendChild(deleteCell);
             
             // Append the row to the table
             table.appendChild(row);
@@ -317,11 +349,45 @@ function addRow(data) {
         var newValue = this.value;
         // Update the JSON data
         data.items[index].flags = newValue;
+        updateCalculatedSum(data.items);
     });
     // Append the select input to the cell
     flagsCell.appendChild(flagsSelect);
     // Append the cell to the row
     row.appendChild(flagsCell);
+
+    // Create a cell for the delete row button
+    var deleteCell = document.createElement("td");
+    deleteCell.classList.add("delete-cell");
+    // Create icon for the delete row button
+    var deleteSpan = document.createElement("span");
+    deleteSpan.classList.add("glyphicon");
+    deleteSpan.classList.add("glyphicon-trash");
+    // Add an event listener to delete the row when clicked
+    deleteSpan.addEventListener("click", function() {
+        let node = this.parentNode.parentNode;
+        node.style.color = "red";
+
+        setTimeout(function(node) {
+            if (confirm("Are you sure you want to delete the selected row?")) {
+                // Get the index of the row
+                var index = node.rowIndex - 1;
+                
+                // Delete row
+                data.items.splice(index, 1);
+                node.remove();
+
+                updateCalculatedSum(data.items);
+            } else {
+                node.style.color = "";
+            }
+        }, 0, node);
+    });
+    // Append the select input to the cell
+    deleteCell.appendChild(deleteSpan);
+    // Append the cell to the row
+    row.appendChild(deleteCell);
+
     // Append the row to the table
     table.appendChild(row);
     // Create a new empty item in the JSON data
@@ -365,17 +431,32 @@ function checkDate(receiptDate) {
     // check if the difference is within 150 days
     return days <= 150;
 }
-
-function updateCalculatedSum(items) {
-    let sum = 0;
-
-    for (i in items) {
-        multiplier = 1;
-        if (items[i].flags)
-            multiplier = 1.13;
-
-        sum += items[i].amount * multiplier;
+function checkTotals(receiptData) {
+    return document.getElementById("calculated-sum").innerHTML == receiptData.total;
+}
+function checkForEmptyFields() {
+    for (i of document.getElementsByTagName("input")) {
+        if (i.value == "" || i.value == null)
+            return false;
     }
 
+    return true;
+}
+
+function updateCalculatedSum(items) {
+    let subtotal = 0;
+    let tax = 0;
+
+    for (i in items) {
+        subtotal += items[i].amount;
+
+        if (items[i].flags)
+            tax += 0.13 * items[i].amount;
+    }
+
+    let sum = subtotal + tax;
+
     document.getElementById("calculated-sum").innerHTML = sum.toFixed(2);
+    document.getElementById("calculated-subtotal").innerHTML = subtotal.toFixed(2);
+    document.getElementById("calculated-tax").innerHTML = tax.toFixed(2);
 }

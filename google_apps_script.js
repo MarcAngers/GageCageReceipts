@@ -135,6 +135,8 @@ function record_data(data) {
     var doc = SpreadsheetApp.getActiveSpreadsheet();
     var sheetName = dateToSheetName(data.date);
     var sheet = doc.getSheetByName(sheetName);
+    var dictionarySheet = doc.getSheetByName("Dictionary");
+
 
     // Create new sheet and add it to the Running Totals
     if (sheet == null) {
@@ -162,12 +164,12 @@ function record_data(data) {
       totalsSheet.getRange(populatedRowsForColumn(totalsSheet, "C") + 3, 3, 1, 10).setValues(totalsColumns);
     }
 
-    // Add receipt data to the relevant sheet
-    // Add receipt totals
+    // Add data to the relevant sheet
+    // Receipt totals:
     let nextRow = populatedRowsForColumn(sheet, "A") + 8;
     let values = [];
     values[0] = [
-      data.date,
+      dateToSheetHeader(data.date),
       data.total,
       data.credit_card_number,
       '=if(C' + nextRow + '>0, vlookup(text(C' + nextRow + ',"#")&"*",\'Credit Cards\'!$A:$B,2,false), "")'
@@ -177,7 +179,7 @@ function record_data(data) {
     range.setBackground("#f4cccc");
 
 
-    // Add receipt data
+    // Receipt data:
     for (var key in data.items) {  
       if (data.items[key] == null)
         continue;
@@ -187,15 +189,18 @@ function record_data(data) {
       let values = [];
       let itemName = Object.values(formattedData)[1];
       values[0] = [
+        dateToSheetHeader(data.date),                                                           // Date
         '=IFERROR(VLOOKUP("' + itemName + '", Dictionary!A2:B, 2, FALSE), "' + itemName + '")', // Item name
-        Object.values(formattedData)[0], // Price
+        Object.values(formattedData)[0],                                                        // Price
       ];
 
-      let range = sheet.getRange(nextRow, 11, 1, 2);
+      let range = sheet.getRange(nextRow, 11, 1, 3);
       range.setValues(values);
       range.setBackground("#fff2cc");
 
       insertProportionOwed(sheet, nextRow);
+
+      addToDictionary(dictionarySheet, itemName);
     }
   }
   catch(error) {
@@ -260,6 +265,12 @@ function dateToSheetName(date) {
 
   return numberToMonth[monthNumber] + " " + ymd[0];
 }
+function dateToSheetHeader(date) {
+  let ymd = date.split("-");
+  let monthNumber = parseInt(ymd[1]);
+
+  return numberToMonth[monthNumber].slice(0, 3) + ". " + ymd[2];
+}
 
 function formatLineData(values, date) {
   let multiplier = 1.0;
@@ -285,13 +296,13 @@ function populatedRowsForColumn(sheet, col) {
 
 function insertProportionOwed(sheet, row) {
   let flag = '%'
-  let template = '=if($L' + row + '="", "", if(SUM($N' + row + ':$V' + row + ') > 0, $L' + row + '*' + flag + row + '/(SUMIF($N' + row + ':$V' + row + ',">0")), 0))'
+  let template = '=if($M' + row + '="", "", if(SUM($O' + row + ':$W' + row + ') > 0, $M' + row + '*' + flag + row + '/(SUMIF($O' + row + ':$W' + row + ',">0")), 0))'
   
-  let columns = [ 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V' ];
+  let columns = [ 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' ];
   let values = [];
 
   // Push check field
-  values.push('=if($L' + row + '="", "", eq(SUM(X' + row + ':AF' + row + '), L' + row + '))');
+  values.push('=if($M' + row + '="", "", eq(SUM(Y' + row + ':AG' + row + '), M' + row + '))');
 
   // Push total proportion fields
   for (let i = 0; i < columns.length; i++) {
@@ -302,12 +313,20 @@ function insertProportionOwed(sheet, row) {
     values  
   ];
 
-  let range = sheet.getRange(row, 14, 1, 9);
+  let range = sheet.getRange(row, 15, 1, 9);
   range.setBackground("#d0e0e3");
 
-  range = sheet.getRange(row, 23, 1, 10);
+  range = sheet.getRange(row, 24, 1, 10);
   range.setValues(values);
 
-  range = sheet.getRange(row, 24, 1, 9);
+  range = sheet.getRange(row, 25, 1, 9);
   range.setBackground("#c9daf8");
+}
+
+function addToDictionary(dictionarySheet, name) {
+  let values = dictionarySheet.getRange("A:A").getValues().flat();
+
+  if (!values.includes(name)) {
+    dictionarySheet.appendRow([name, name]);
+  }
 }
