@@ -440,8 +440,12 @@ function checkTotals(receiptData) {
 }
 function checkForEmptyFields() {
     for (i of document.getElementsByTagName("input")) {
-        if (i.value == "" || i.value == null)
+        if (i.type == "file") 
+            continue;
+
+        if (i.value == "" || i.value == null) {
             return false;
+        }
     }
 
     return true;
