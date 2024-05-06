@@ -55,19 +55,21 @@ window.onload = function() {
 
     document.getElementById("upload").addEventListener("click", function() {
         // Maybe turn this into an array to loop through if there ends up being more confirmations to check
-        let dateCheckConfirm = false, totalsCheckConfirm = false, emptyFieldCheckConfirm = false;
+        let dateCheckConfirm = checkDate(receiptData.date);
+        let totalsCheckConfirm = checkTotals(receiptData);
+        let emptyFieldCheckConfirm = checkForEmptyFields();
 
-        if (!checkDate(receiptData.date)) {
+        if (!dateCheckConfirm) {
             dateCheckConfirm = confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?");
         }
-        if (!checkTotals(receiptData)) {
+        if (!totalsCheckConfirm) {
             totalsCheckConfirm = confirm("The calculated total doesn't match the total from the receipt! Are you sure you want to add this data?");
         }
-        if (!checkForEmptyFields()) {
+        if (!emptyFieldCheckConfirm) {
             emptyFieldCheckConfirm = confirm("There are empty fields in your receipt data! Are you sure you want to add an empty field?");
         }
 
-        if  (dateCheckConfirm && totalsCheckConfirm) {
+        if  (dateCheckConfirm && totalsCheckConfirm && emptyFieldCheckConfirm) {
             if (__DEBUG__) {
                 console.log(receiptData);
                 document.getElementById("data-table").classList.toggle("hidden");
@@ -75,6 +77,8 @@ window.onload = function() {
             } else {
                 sendToSheet(receiptData);
             }
+        } else {
+            console.log("Upload aborted due to failed user confirmation");
         }
     });
 
@@ -436,8 +440,12 @@ function checkTotals(receiptData) {
 }
 function checkForEmptyFields() {
     for (i of document.getElementsByTagName("input")) {
-        if (i.value == "" || i.value == null)
+        if (i.type == "file") 
+            continue;
+
+        if (i.value == "" || i.value == null) {
             return false;
+        }
     }
 
     return true;
