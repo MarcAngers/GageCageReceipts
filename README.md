@@ -8,7 +8,7 @@ There is a Flask server setup for local development and debugging.
 * **Web Interface**: User-friendly frontend for submitting receipt details.
 * **Google Integration**: Seamless connection with Google Sheets/Drive via Apps Script.
 * **Google Sheets Backend**: Receipt data is stored and managed through a shared Google Sheet that everyone in the house can edit.
-* **Python/Flask Backend**: Lightweight and efficient server-side processing.
+* **Python/Flask Server Setup for a Local Deployment**: Lightweight server setup for local development and troubleshooting.
 
 ## 📂 Project Structure
 
