@@ -28,7 +28,7 @@ cd GageCageReceipts
 
 ### 2. Setup Google Sheet
 1. Create a new Google Sheet
-2. Go to https://docs.google.com/spreadsheets/d/1FD-jWAkq4_Bz9g6L5EzygkOfGZ02Un1AdxbCW_PTVUM/edit?usp=sharing
+2. Copy the Google Sheet template from https://docs.google.com/spreadsheets/d/1HoFZF1vn509-kzPmZmNmQOBuazFIRn_ES7bRk__pcJM/edit?usp=sharing
 3. Copy the following tabs to your own version:
    - Running Totals
    - Boilerplate
