@@ -408,7 +408,7 @@ function addRow(data) {
 function sendToSheet(data) {
     // Send receipt data to the google sheets web app
     request = $.ajax({
-        url: "https://script.google.com/macros/s/AKfycbyHfpCOa3usT6Uqhqas99jTTNutsGFCy7F_eoSeMHHO_r13e4r6HXwG_3e8-fykFZS4DQ/exec",
+        url: "https://script.google.com/macros/s/AKfycbzkh0VD2PqzsX8zWoC1dKZTDW5uBbTZzOrpLsQ_L2Hyoqd56KQPPEhEp0Gc0tKX85ZL/exec",
         type: "post",
         data: data,
         beforeSend: function() {
