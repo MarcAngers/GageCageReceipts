@@ -96,7 +96,7 @@ function formatReceiptData(data) {
         formattedData.credit_card_number = "XXXX"
         formattedData.items = [];
     } else {
-        if (data.receipts[0].merchant_name.includes("LOBLAWS")) {   // Loblaws does dates backwards smh, hardcoding a solution
+        if (data.receipts[0].merchant_name.toUpperCase().includes("LOBLAWS")) {   // Loblaws does dates backwards smh, hardcoding a solution
             var DMY = data.receipts[0].date.split("-");
             formattedData.date = "20" + DMY[2]                     // Will need to change this in the year 2100 ;-;
                 + "-" + DMY[1]
