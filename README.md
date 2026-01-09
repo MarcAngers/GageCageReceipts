@@ -22,7 +22,7 @@ There is a Flask server setup for local development and debugging.
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/MarcAngers/GageCageReceipts.git](https://github.com/MarcAngers/GageCageReceipts.git)
+git clone -b public [https://github.com/MarcAngers/GageCageReceipts.git](https://github.com/MarcAngers/GageCageReceipts.git)
 cd GageCageReceipts
 ```
 
@@ -54,7 +54,7 @@ Put your frontend code on the internet somewhere for easy access. This page shou
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/MarcAngers/GageCageReceipts.git](https://github.com/MarcAngers/GageCageReceipts.git)
+git clone -b public [https://github.com/MarcAngers/GageCageReceipts.git](https://github.com/MarcAngers/GageCageReceipts.git)
 cd GageCageReceipts
 ```
 
