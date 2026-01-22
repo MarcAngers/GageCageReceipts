@@ -1,143 +1,384 @@
-html {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+/* =========================================
+   1. GLOBAL RESET & FONTS
+   ========================================= */
+   body {
+    background-color: #f4f7f6; /* Modern soft gray, replaces 'azure' */
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Native system fonts load faster */
+    margin: 0;
+    padding-bottom: 80px; /* Space for the bottom sticky button */
+}
+
+h1 {
+    font-size: 1.5rem;
     text-align: center;
-    background-color: azure;
-}
-footer {
-  padding: 10px;
-}
-
-.btn {
-    margin: 10px;
-}
-.hidden {
-    display: none;
+    color: #2c3e50;
+    margin: 20px 0;
+    font-weight: 600;
 }
 
-.delete-cell {
-  width: 30px;
+/* =========================================
+   2. LAYOUT CONTAINERS
+   ========================================= */
+.mobile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
 }
 
-#receiptfile-label {
-    margin: auto;
-    padding: 10%;
-    font-size: 200px;
-    border-radius: 20px;
-    border: 10px solid;
-}
-#receiptfile {
-    display: none;
-}
-#manual-entry-container {
-  margin-top: 40px;
+.card-panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-#data-table {
-    padding: 20px;
-    color: darkslategray;
-}
-#table {
-    margin: auto;
-}
-#date-credit-card-container {
-    margin: 10px;
-    padding: 10px 10px 0px 10px;
-}
-#date-input {
-  margin-right: 20px;
-}
-#credit-card-input {
-    width: 50px;
-}
-#total-container {
-  margin: 10px;
-  padding: 0px 10px 10px 10px;
+/* ... [Keep Global Reset, Layout Containers, UPLOAD SCREEN, and LOADER ANIMATION as they were] ... */
+
+/* ... REPLACE THE "INPUTS & FORMS", "THE TABLE", and "TOTALS" SECTIONS WITH THIS: ... */
+
+/* =========================================
+   3. INPUTS & FORMS
+   ========================================= */
+.input-group-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
-/* Define vars we'll be using */
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.75rem; /* Slightly smaller to save space */
+    text-transform: uppercase;
+    color: #95a5a6;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+}
+
+/* Global Input Styling */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: #fff !important; /* Always white when typing */
+}
+
+/* =========================================
+   4. THE TABLE
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* STRICT spacing */
+}
+
+th { 
+    text-align: left; 
+    color: #95a5a6; 
+    font-size: 0.8rem; 
+    padding-bottom: 5px;
+}
+
+td { 
+    border-bottom: 1px solid #eee;
+    vertical-align: middle; 
+}
+
+/* CRITICAL FIX: High Specificity to force transparency */
+table tr td input, 
+table tr td select {
+    border: none;
+    background-color: transparent; /* This ensures the red row color shows through */
+    padding: 12px 8px; /* Tighter padding */
+    font-size: 14px;
+    border-radius: 0;
+}
+
+/* Column Widths - Adjusted for better "Tax" visibility */
+th:nth-child(1) { width: 50%; } /* Item (Shrunk) */
+th:nth-child(2) { width: 25%; } /* Price */
+th:nth-child(3) { width: 15%; } /* Tax (Expanded) */
+th:nth-child(4) { width: 10%; text-align: center; } /* Delete (Expanded for easy tapping) */
+
+/* =========================================
+   5. TOTALS SECTION (Ledger Style)
+   ========================================= */
+.total-section {
+    padding: 20px 15px;
+}
+
+.ledger-row {
+    display: flex;
+    justify-content: flex-end; /* Packs everything to the right */
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 15px; /* Space between "Receipt Total" text and the Number */
+}
+
+.ledger-label {
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    margin: 0;
+    text-transform: none; /* easier to read than uppercase */
+}
+
+.ledger-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-align: right;
+    border: none;
+    background: transparent;
+    color: #2c3e50;
+    width: 140px; /* Fixed width ensures the two numbers align vertically */
+    padding: 0;
+    margin: 0;
+    font-family: inherit; /* Ensures numbers look the same in input vs div */
+}
+
+/* Specific styling to make the Input look like the Text below it */
+input.ledger-value {
+    border-bottom: 1px dashed #ccc; /* Subtle hint that it's editable */
+    border-radius: 0;
+}
+input.ledger-value:focus {
+    border-bottom: 1px solid #3498db;
+}
+
+/* The Breakdown Section */
+.ledger-breakdown {
+    text-align: right;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #f0f0f0; /* The "Summation Line" */
+    color: #555; /* Darker gray to be "clearly visible" */
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* COLOR LOGIC RE-BINDING */
+/* The JS toggles .match and .mismatch classes. 
+   We apply them to the ledger-value class. */
+.ledger-value.match { color: #27ae60 !important; }
+.ledger-value.mismatch { color: #e74c3c !important; }
+
+/* Optional: Make the border change color too for the input */
+input.ledger-value.mismatch { border-bottom-color: #e74c3c; }
+input.ledger-value.match { border-bottom-color: #27ae60; }
+
+/* =========================================
+   6. UPLOAD SCREEN
+   ========================================= */
+#receiptfile-container {
+    text-align: center;
+}
+
+.camera-icon {
+    font-size: 15rem;
+    padding: 8rem;
+    border: 5px dashed #95a5a6;
+    border-radius: 30px;
+    margin: 3rem;
+    cursor: pointer;
+}
+
+/* =========================================
+   7. LOADER ANIMATION (Ported from your original)
+   ========================================= */
+/* I resized these variables to fit mobile screens better */
 :root {
-  --brand-success: #5cb85c;
-  --loader-size: 20em;
-  --check-height: calc(var(--loader-size) / 2);
-  --check-width: calc(var(--check-height) / 2);
-  --check-left: calc(var(--loader-size) / 6 + var(--loader-size) / 12);
-  --check-thickness: 10px;
-  --check-color: var(--brand-success);
+    --brand-success: #5cb85c;
+    --loader-size: 10em; /* Reduced from 20em to 10em */
+    --check-height: calc(var(--loader-size) / 2);
+    --check-width: calc(var(--check-height) / 2);
+    --check-left: calc(var(--loader-size) / 6 + var(--loader-size) / 12);
+    --check-thickness: 6px; /* Slightly thinner to match new size */
+    --check-color: var(--brand-success);
 }
 
 .circle-loader {
-  margin-top: 15%;
-  margin-bottom: calc(var(--loader-size) / 2);
-  border: 10px solid rgba(0, 0, 0, 0.1);
-  border-left-color: var(--check-color);
-  animation: loader-spin 1.2s infinite linear;
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-  border-radius: 50%;
-  width: var(--loader-size);
-  height: var(--loader-size);
+    margin: 20px auto; /* Centers it horizontally */
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--check-color);
+    animation: loader-spin 1.2s infinite linear;
+    position: relative;
+    display: block; /* Changed from inline-block for better centering */
+    border-radius: 50%;
+    width: var(--loader-size);
+    height: var(--loader-size);
 }
 
 .load-complete {
-  -webkit-animation: none;
-  animation: none;
-  border-color: var(--check-color);
-  transition: border 500ms ease-out;
+    -webkit-animation: none;
+    animation: none;
+    border-color: var(--check-color);
+    transition: border 500ms ease-out;
 }
 
 .checkmark {
-  display: none;
+    display: none;
 }
 
 .checkmark.draw:after {
-  animation-duration: 800ms;
-  animation-timing-function: ease;
-  animation-name: checkmark;
-  transform: scaleX(-1) rotate(135deg);
+    animation-duration: 800ms;
+    animation-timing-function: ease;
+    animation-name: checkmark;
+    transform: scaleX(-1) rotate(135deg);
 }
 
 .checkmark:after {
-  opacity: 1;
-  height: var(--check-height);
-  width: var(--check-width);
-  transform-origin: left top;
-  border-right: var(--check-thickness) solid var(--check-color);
-  border-top: var(--check-thickness) solid var(--check-color);
-  content: "";
-  left: var(--check-left);
-  top: var(--check-height);
-  position: absolute;
+    opacity: 1;
+    height: var(--check-height);
+    width: var(--check-width);
+    transform-origin: left top;
+    border-right: var(--check-thickness) solid var(--check-color);
+    border-top: var(--check-thickness) solid var(--check-color);
+    content: "";
+    left: var(--check-left);
+    top: var(--check-height);
+    position: absolute;
 }
 
 @keyframes loader-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes checkmark {
-  0% {
-    height: 0;
-    width: 0;
-    opacity: 1;
-  }
-  20% {
-    height: 0;
-    width: var(--check-width);
-    opacity: 1;
-  }
-  40% {
-    height: var(--check-height);
-    width: var(--check-width);
-    opacity: 1;
-  }
-  100% {
-    height: var(--check-height);
-    width: var(--check-width);
-    opacity: 1;
-  }
+    0% { height: 0; width: 0; opacity: 1; }
+    20% { height: 0; width: var(--check-width); opacity: 1; }
+    40% { height: var(--check-height); width: var(--check-width); opacity: 1; }
+    100% { height: var(--check-height); width: var(--check-width); opacity: 1; }
+}
+
+/* =========================================
+   8. ERROR STATE ANIMATION
+   ========================================= */
+
+/* The Red Error Text */
+.error-text {
+    text-align: center;
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    padding: 0 20px;
+}
+
+/* Turn the circle border red and stop spinning */
+.load-error {
+    animation: none;
+    border-color: #e74c3c;
+    transition: border 500ms ease-out;
+}
+
+/* The 'X' Container */
+.cross {
+    display: none; /* Hidden by default */
+}
+
+/* Only show X when the parent has the error class */
+.load-error .cross {
+    display: block;
+}
+
+/* The two lines of the X */
+.cross:before, .cross:after {
+    position: absolute;
+    content: '';
+    width: 50%; /* Relative to the circle size */
+    height: 6px; /* Same thickness as checkmark */
+    background-color: #e74c3c;
+    border-radius: 2px;
+    
+    /* Center exactly */
+    top: 50%;
+    left: 25%; 
+}
+
+/* Rotate them to form X */
+.cross:before {
+    transform: rotate(45deg);
+}
+.cross:after {
+    transform: rotate(-45deg);
+}
+
+/* Optional: Pop-in animation for the X */
+.load-error .cross:before, 
+.load-error .cross:after {
+    animation: scaleIn 0.3s forwards;
+}
+
+@keyframes scaleIn {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    100% { opacity: 1; }
+    /* We handle the rotation in the base class to keep animation simple */
+}
+
+/* VALIDATION STATES */
+.invalid-field {
+    border: 2px solid #e74c3c !important; /* Bright Red Border */
+    background-color: #fdedec !important; /* Very light red background */
+    color: #c0392b !important; /* Dark red text */
+}
+
+/* Utility */
+.hidden { display: none !important; }
+
+/* =========================================
+   9. CUSTOM DIALOG
+   ========================================= */
+dialog {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* The dark background behind the modal */
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+dialog h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+dialog p {
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Utility to make the confirm button red when needed */
+.btn-danger-mode {
+    background-color: #e74c3c !important;
+    color: white !important;
 }
