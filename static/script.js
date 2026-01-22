@@ -5,8 +5,18 @@ window.onload = function() {
     var receiptData;
 
     document.getElementById("receiptfile").addEventListener('change', function() {
-        document.getElementById("receiptfile-container").classList.toggle("hidden");
-        $(".circle-loader").toggleClass("hidden");
+        // 1. Hide the upload button container
+        document.getElementById("receiptfile-container").classList.add("hidden");
+
+        // 2. RESET LOADER STATE (Crucial for retries)
+        // We must clear any previous "Success" or "Error" states before spinning again
+        var loader = $(".circle-loader");
+        loader.removeClass("hidden");          // Show spinner
+        loader.removeClass("load-complete");   // Remove Green ring
+        loader.removeClass("load-error");      // Remove Red ring
+        $(".checkmark").hide();                // Hide Green Check
+        $(".cross").hide();                    // Hide Red X
+        document.getElementById("error-message").classList.add("hidden"); // Hide old error text
 
         if (__DEBUG__) {
             fetch('./static/testdata-loblaws.json')
@@ -20,7 +30,7 @@ window.onload = function() {
                 $(".circle-loader").toggleClass("hidden");
             })
             .catch(error => console.error(error));
-        } else {           
+        } else {          
             var imageFile = document.getElementById("receiptfile").files[0];
             var receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt';
 
@@ -34,14 +44,35 @@ window.onload = function() {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Server responded with " + response.status); 
+                }
+                return response.json();
+            })
             .then(data => {
+                // Check if the API itself returned an error message in the JSON
+                if (!data || !data.receipts || data.receipts.length === 0) {
+                     throw new Error("No receipt text found in image.");
+                }
+
                 receiptData = formatReceiptData(data);
                 generateTable(receiptData);
-                document.getElementById("data-table").classList.toggle("hidden");
-                $(".circle-loader").toggleClass("hidden");
+                
+                // Success! Hide loader and show table
+                document.getElementById("data-table").classList.remove("hidden");
+                $(".circle-loader").addClass("hidden");
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                console.error(error);
+                // Trigger the Red X animation
+                showError("OCR Failed: " + error.message);
+                
+                // Optional: Show the upload button again so they can retry
+                setTimeout(function() {
+                    document.getElementById("receiptfile-container").classList.remove("hidden");
+                }, 2000); 
+            });
         }
     });
 
@@ -53,20 +84,35 @@ window.onload = function() {
         document.getElementById("data-table").classList.toggle("hidden");
     });
 
-    document.getElementById("upload").addEventListener("click", function() {
-        // Maybe turn this into an array to loop through if there ends up being more confirmations to check
+    document.getElementById("upload").addEventListener("click", async function() {
         let dateCheckConfirm = checkDate(receiptData.date);
         let totalsCheckConfirm = checkTotals(receiptData);
         let emptyFieldCheckConfirm = checkForEmptyFields();
 
         if (!dateCheckConfirm) {
-            dateCheckConfirm = confirm("The selected date is far from today! Are you sure you want to add a receipt from this date (" + receiptData.date + ")?");
+                dateCheckConfirm = await openConfirm(
+                'Whoa There!', 
+                `The selected date is far from today! Are you sure you want to add a receipt from this date ${receiptData.date }?`, 
+                'Yes, submit anyway', 
+                false // Not dangerous, just info
+            );
         }
         if (!totalsCheckConfirm) {
-            totalsCheckConfirm = confirm("The calculated total doesn't match the total from the receipt! Are you sure you want to add this data?");
+            totalsCheckConfirm = await openConfirm(
+                'Whoa There!', 
+                'the calculated total doesn\'t match the total on the receipt! Are you sure you want to add this data?', 
+                'Yes, submit anyway', 
+                true // Danger! Red button
+            );
+            if (!confirmed) return;
         }
         if (!emptyFieldCheckConfirm) {
-            emptyFieldCheckConfirm = confirm("There are empty fields in your receipt data! Are you sure you want to add an empty field?");
+            emptyFieldCheckConfirm = await openConfirm(
+                'Whoa There!', 
+                'There are empty fields in your receipt data! Do NOT submit this data unless you are 100% sure what you are doing!', 
+                'Submit Anyway', 
+                true // Danger! Red button
+            );
         }
 
         if  (dateCheckConfirm && totalsCheckConfirm && emptyFieldCheckConfirm) {
@@ -147,143 +193,149 @@ function formatReceiptData(data) {
     return formattedData;
 }
 
+function createRow(item, tableBody, dataItems, updateCallback) {
+    var row = document.createElement("tr");
+
+    // --- Description Cell ---
+    var descCell = document.createElement("td");
+    var descInput = document.createElement("input");
+    descInput.type = "text";
+    descInput.value = item.description;
+    
+    // ROBUSTNESS FIX: Direct Object Reference
+    // We update the 'item' object directly. No need to calculate 'rowIndex'.
+    descInput.addEventListener("change", function() {
+        item.description = this.value;
+    });
+    descCell.appendChild(descInput);
+    row.appendChild(descCell);
+
+    // --- Amount Cell ---
+    var amountCell = document.createElement("td");
+    var amountInput = document.createElement("input");
+    amountInput.type = "number";
+    // Handle empty new rows vs existing data
+    amountInput.value = (item.amount === "" || item.amount === null) ? "" : parseFloat(item.amount).toFixed(2); 
+    
+    amountInput.addEventListener("change", function() {
+        var newValue = parseFloat(this.value);
+        item.amount = isNaN(newValue) ? 0 : newValue;
+        updateCallback(); // Recalculate totals immediately
+    });
+    amountCell.appendChild(amountInput);
+    row.appendChild(amountCell);
+
+    // --- Flags Cell ---
+    var flagsCell = document.createElement("td");
+    var flagsSelect = document.createElement("select");
+    var optionNo = new Option("No", "");
+    var optionYes = new Option("Yes", "Yes");
+    
+    flagsSelect.add(optionNo);
+    flagsSelect.add(optionYes);
+    flagsSelect.value = item.flags ? "Yes" : "";
+
+    flagsSelect.addEventListener("change", function() {
+        item.flags = this.value;
+        updateCallback();
+    });
+    flagsCell.appendChild(flagsSelect);
+    row.appendChild(flagsCell);
+
+    // --- Delete Cell ---
+    var deleteCell = document.createElement("td");
+    deleteCell.style.textAlign = "center";
+    var deleteSpan = document.createElement("span");
+    deleteSpan.className = "glyphicon glyphicon-trash";
+    deleteSpan.style.cursor = "pointer"; // UX Enhancement
+
+    deleteSpan.addEventListener("click", function() {
+        // Visual feedback
+        row.style.backgroundColor = "#ffcccc"; 
+        
+        // slight timeout to allow UI render
+        setTimeout(async function() {
+            let confirmed = await openConfirm(
+                'Delete Row?', 
+                'This action cannot be undone!', 
+                'Yes, delete it', 
+                false
+            );
+            if (confirmed) {
+                // Remove from the data array
+                // We use indexOf here because we have the direct object reference
+                var index = dataItems.indexOf(item);
+                if (index > -1) {
+                    dataItems.splice(index, 1);
+                }
+                // Remove from DOM
+                row.remove();
+                updateCallback();
+            } else {
+                row.style.backgroundColor = "";
+            }
+        }, 10);
+    });
+    deleteCell.appendChild(deleteSpan);
+    row.appendChild(deleteCell);
+
+    tableBody.appendChild(row);
+}
+
 function generateTable(data) {
+    // --- 1. Restore Date Input Logic WITH VALIDATION ---
     var dateInput = document.getElementById("date-input");
     dateInput.value = data.date;
-    dateInput.addEventListener("change", function() {
-        var newValue = this.value;
-        data.date = newValue;
+    
+    var newDateInput = dateInput.cloneNode(true);
+    dateInput.parentNode.replaceChild(newDateInput, dateInput);
+    
+    // Validate immediately on load
+    validateDateInput(newDateInput);
+
+    newDateInput.addEventListener("change", function() {
+        data.date = this.value;
+        validateDateInput(this); // Validate on change
     });
+
+    // --- 2. Restore Credit Card Logic WITH VALIDATION ---
     var CCInput = document.getElementById("credit-card-input");
     CCInput.value = data.credit_card_number;
-    CCInput.addEventListener("change", function() {
-        var newValue = this.value;
-        data.credit_card_number = newValue;
+    
+    var newCCInput = CCInput.cloneNode(true);
+    CCInput.parentNode.replaceChild(newCCInput, CCInput);
+
+    // Validate immediately on load
+    validateCCInput(newCCInput);
+
+    newCCInput.addEventListener("change", function() {
+        data.credit_card_number = this.value;
+        validateCCInput(this); // Validate on change
     });
 
-    // Create table with receipt data
     var table = document.getElementById("table");
-    for (var i = 0; i < data.items.length; i++) {
-        var item = data.items[i];
-        if (item) {
-            // Create a new row
-            var row = document.createElement("tr");
-
-            // Create a cell for the description
-            var descCell = document.createElement("td");
-            // Create a text input for the description
-            var descInput = document.createElement("input");
-            descInput.type = "text";
-            descInput.value = item.description;
-            // Add an event listener to update the JSON data when the input changes
-            descInput.addEventListener("change", function() {
-                // Get the index of the row
-                var index = this.parentNode.parentNode.rowIndex - 1;
-                // Get the new value
-                var newValue = this.value;
-                // Update the JSON data
-                data.items[index].description = newValue;
-            });
-            // Append the input to the cell
-            descCell.appendChild(descInput);
-            // Append the cell to the row
-            row.appendChild(descCell);
-            
-            // Create a cell for the amount
-            var amountCell = document.createElement("td");
-            // Create a number input for the amount
-            var amountInput = document.createElement("input");
-            amountInput.type = "number";
-            amountInput.value = item.amount.toFixed(2); // Round to 2 decimal places
-            // Add an event listener to update the JSON data when the input changes
-            amountInput.addEventListener("change", function() {
-                // Get the index of the row
-                var index = this.parentNode.parentNode.rowIndex - 1;
-                // Get the new value
-                var newValue = parseFloat(this.value);
-                // Update the JSON data
-                data.items[index].amount = newValue;
-
-                updateCalculatedSum(data.items);
-            });
-            // Append the input to the cell
-            amountCell.appendChild(amountInput);
-            // Append the cell to the row
-            row.appendChild(amountCell);
-            
-            // Create a cell for the flags
-            var flagsCell = document.createElement("td");
-            // Create a select input for the flags
-            var flagsSelect = document.createElement("select");
-            // Create two options for the flags
-            var option1 = document.createElement("option");
-            option1.value = "";
-            option1.text = "No";
-            var option2 = document.createElement("option");
-            option2.value = "Yes";
-            option2.text = "Yes";
-            // Append the options to the select input
-            flagsSelect.appendChild(option1);
-            flagsSelect.appendChild(option2);
-            // Set the selected option based on the JSON data
-            flagsSelect.value = item.flags ? "Yes" : "";
-            // Add an event listener to update the JSON data when the input changes
-            flagsSelect.addEventListener("change", function() {
-                // Get the index of the row
-                var index = this.parentNode.parentNode.rowIndex - 1;
-                // Get the new value
-                var newValue = this.value;
-                // Update the JSON data
-                data.items[index].flags = newValue;
-                updateCalculatedSum(data.items);
-            });
-            // Append the select input to the cell
-            flagsCell.appendChild(flagsSelect);
-            // Append the cell to the row
-            row.appendChild(flagsCell);
-
-            // Create a cell for the delete row button
-            var deleteCell = document.createElement("td");
-            deleteCell.classList.add("delete-cell");
-            // Create icon for the delete row button
-            var deleteSpan = document.createElement("span");
-            deleteSpan.classList.add("glyphicon");
-            deleteSpan.classList.add("glyphicon-trash");
-            // Add an event listener to delete the row when clicked
-            deleteSpan.addEventListener("click", function() {              
-                let node = this.parentNode.parentNode;
-                node.style.color = "red";
-
-                setTimeout(function(node) {
-                    if (confirm("Are you sure you want to delete the selected row?")) {
-                        // Get the index of the row
-                        var index = node.rowIndex - 1;
-                        
-                        // Delete row
-                        data.items.splice(index, 1);
-                        node.remove();
-
-                        updateCalculatedSum(data.items);
-                    } else {
-                        node.style.color = "";
-                    }
-                }, 0, node);
-            });
-            // Append the select input to the cell
-            deleteCell.appendChild(deleteSpan);
-            // Append the cell to the row
-            row.appendChild(deleteCell);
-            
-            // Append the row to the table
-            table.appendChild(row);
-        }
+    // Clean up existing rows if any (except header)
+    // Note: It is better to have a <tbody> in your HTML, but this works for your current structure
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
     }
+
+    // Use specific <tbody> if you add one later, currently appending to table
+    // ROBUSTNESS FIX: Loop safety
+    data.items.forEach(function(item) {
+        if (item) {
+            createRow(item, table, data.items, function() {
+                updateCalculatedSum(data.items);
+            });
+        }
+    });
 
     var totalInput = document.getElementById("total-input");
     totalInput.value = data.total;
     totalInput.addEventListener("change", function() {
         var newValue = this.value;
         data.total = newValue;
+        updateCalculatedSum(data.items);
     });
 
     updateCalculatedSum(data.items);
@@ -291,135 +343,70 @@ function generateTable(data) {
 
 function addRow(data) {
     var table = document.getElementById("table");
-    var row = document.createElement("tr");
-    var descCell = document.createElement("td");
-    var descInput = document.createElement("input");
-    descInput.type = "text";
-    descInput.value = "";
-
-    // Add an event listener to update the JSON data when the input changes
-    descInput.addEventListener("change", function() {
-        var index = this.parentNode.parentNode.rowIndex - 1;
-        var newValue = this.value;
-        data.items[index].description = newValue;
-    });
-
-    // Append the input to the cell
-    descCell.appendChild(descInput);
-    // Append the cell to the row
-    row.appendChild(descCell);
-    // Create a cell for the amount
-    var amountCell = document.createElement("td");
-    // Create a number input for the amount
-    var amountInput = document.createElement("input");
-    amountInput.type = "number";
-    amountInput.value = "";
-    // Add an event listener to update the JSON data when the input changes
-    amountInput.addEventListener("change", function() {
-        // Get the index of the row
-        var index = this.parentNode.parentNode.rowIndex - 1;
-        // Get the new value
-        var newValue = parseFloat(this.value);
-        // Update the JSON data
-        data.items[index].amount = newValue;
-        updateCalculatedSum(data.items);
-    });
-    // Append the input to the cell
-    amountCell.appendChild(amountInput);
-    // Append the cell to the row
-    row.appendChild(amountCell);
-
-    // Create a cell for the flags
-    var flagsCell = document.createElement("td");
-    // Create a select input for the flags
-    var flagsSelect = document.createElement("select");
-    // Create two options for the flags
-    var option1 = document.createElement("option");
-    option1.value = "";
-    option1.text = "No";
-    var option2 = document.createElement("option");
-    option2.value = "Yes";
-    option2.text = "Yes";
-    // Append the options to the select input
-    flagsSelect.appendChild(option1);
-    flagsSelect.appendChild(option2);
-    // Set the selected option based on the JSON data
-    flagsSelect.value = "";
-    // Add an event listener to update the JSON data when the input changes
-    flagsSelect.addEventListener("change", function() {
-        // Get the index of the row
-        var index = this.parentNode.parentNode.rowIndex - 1;
-        // Get the new value
-        var newValue = this.value;
-        // Update the JSON data
-        data.items[index].flags = newValue;
-        updateCalculatedSum(data.items);
-    });
-    // Append the select input to the cell
-    flagsCell.appendChild(flagsSelect);
-    // Append the cell to the row
-    row.appendChild(flagsCell);
-
-    // Create a cell for the delete row button
-    var deleteCell = document.createElement("td");
-    deleteCell.classList.add("delete-cell");
-    // Create icon for the delete row button
-    var deleteSpan = document.createElement("span");
-    deleteSpan.classList.add("glyphicon");
-    deleteSpan.classList.add("glyphicon-trash");
-    // Add an event listener to delete the row when clicked
-    deleteSpan.addEventListener("click", function() {
-        let node = this.parentNode.parentNode;
-        node.style.color = "red";
-
-        setTimeout(function(node) {
-            if (confirm("Are you sure you want to delete the selected row?")) {
-                // Get the index of the row
-                var index = node.rowIndex - 1;
-                
-                // Delete row
-                data.items.splice(index, 1);
-                node.remove();
-
-                updateCalculatedSum(data.items);
-            } else {
-                node.style.color = "";
-            }
-        }, 0, node);
-    });
-    // Append the select input to the cell
-    deleteCell.appendChild(deleteSpan);
-    // Append the cell to the row
-    row.appendChild(deleteCell);
-
-    // Append the row to the table
-    table.appendChild(row);
-    // Create a new empty item in the JSON data
+    
     var newItem = {
-        "amount": "",
+        "amount": "", // Initialize as empty string for UI
         "description": "",
         "flags": ""
     };
-
     data.items.push(newItem);
-    console.log(data);
+
+    createRow(newItem, table, data.items, function() {
+        updateCalculatedSum(data.items);
+    });
 }
 
 function sendToSheet(data) {
-    // Send receipt data to the google sheets web app
-    request = $.ajax({
+    $.ajax({
         url: "https://script.google.com/macros/s/AKfycbyHfpCOa3usT6Uqhqas99jTTNutsGFCy7F_eoSeMHHO_r13e4r6HXwG_3e8-fykFZS4DQ/exec",
         type: "post",
         data: data,
         beforeSend: function() {
-            document.getElementById("data-table").classList.toggle("hidden");
-            $(".circle-loader").toggleClass("hidden");
+            // RESET STATE: Hide error text, reset loader colors
+            document.getElementById("error-message").classList.add("hidden");
+            document.getElementById("data-table").classList.add("hidden");
+            
+            var loader = $(".circle-loader");
+            loader.removeClass("hidden");
+            loader.removeClass("load-complete");
+            loader.removeClass("load-error"); // Remove red border
+            $(".checkmark").hide();
+            $(".cross").hide(); // Hide X
         },
         success: function() {
-            $('.circle-loader').toggleClass('load-complete');
-            $('.checkmark').toggle();
+            $('.circle-loader').addClass('load-complete');
+            $('.checkmark').show(); // Show Green Check
+            
+            // Optional: Success message
+            document.getElementById("error-message").textContent = "Receipt Saved!";
+            document.getElementById("error-message").style.color = "#27ae60"; // Green text
+            document.getElementById("error-message").classList.remove("hidden");
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error(textStatus, errorThrown);
+            showError("Failed to save to Google Sheets. Please try again.");
         }
     });
+}
+
+function showError(message) {
+    var loader = $(".circle-loader");
+    
+    // 1. Ensure loader is visible but stop spinning
+    loader.removeClass("hidden");
+    loader.addClass("load-error"); // Turns circle Red
+    
+    // 2. Hide Checkmark, Show X
+    $(".checkmark").hide();
+    $(".cross").show(); 
+
+    // 3. Display the text
+    var msgBox = document.getElementById("error-message");
+    msgBox.textContent = message;
+    msgBox.classList.remove("hidden");
+    
+    // 4. Ensure the table is hidden so the error is the focus
+    document.getElementById("data-table").classList.add("hidden");
 }
 
 function checkDate(receiptDate) {
@@ -455,16 +442,122 @@ function updateCalculatedSum(items) {
     let subtotal = 0;
     let tax = 0;
 
-    for (i in items) {
-        subtotal += items[i].amount;
+    for (let item of items) {
+        let amt = parseFloat(item.amount) || 0;
+        subtotal += amt;
 
-        if (items[i].flags)
-            tax += 0.13 * items[i].amount;
+        // Check for "Yes" or "H" (handling your specific logic)
+        if (item.flags === "Yes" || item.flags === "H") { 
+            tax += amt * 0.13;
+        }
     }
+
+    // ... (keep the calculation logic at the top) ...
 
     let sum = subtotal + tax;
 
-    document.getElementById("calculated-sum").innerHTML = sum.toFixed(2);
+    // Update the text values
+    var calcSumSpan = document.getElementById("calculated-sum");
+    calcSumSpan.innerHTML = sum.toFixed(2);
     document.getElementById("calculated-subtotal").innerHTML = subtotal.toFixed(2);
     document.getElementById("calculated-tax").innerHTML = tax.toFixed(2);
+
+    // --- UPDATED: Color Logic for the Reverted Layout ---
+    var ocrInput = document.getElementById("total-input");
+    var ocrTotal = parseFloat(ocrInput.value) || 0;
+    
+    // Compare with a small margin for floating point errors
+    var difference = Math.abs(sum - ocrTotal);
+    var isMatch = difference < 0.02;
+
+    // Reset classes
+    ocrInput.classList.remove("match", "mismatch");
+    calcSumSpan.classList.remove("match", "mismatch");
+
+    // Only apply colors if the user has actually entered a total > 0
+    if (ocrTotal > 0) {
+        if (isMatch) {
+            ocrInput.classList.add("match");
+            calcSumSpan.classList.add("match");
+        } else {
+            ocrInput.classList.add("mismatch");
+            calcSumSpan.classList.add("mismatch");
+        }
+    }
+}
+
+function validateDateInput(inputElement) {
+    var val = inputElement.value;
+    
+    // 1. Check if Empty
+    if (!val) {
+        inputElement.classList.add("invalid-field");
+        return false;
+    }
+
+    // 2. Check if > 100 days from today
+    var selectedDate = new Date(val);
+    var today = new Date();
+    // Reset time portion to ensure we measure pure days
+    today.setHours(0,0,0,0);
+    selectedDate.setHours(0,0,0,0);
+
+    var diffTime = Math.abs(today - selectedDate);
+    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 100) {
+        inputElement.classList.add("invalid-field");
+        return false;
+    } else {
+        inputElement.classList.remove("invalid-field");
+        return true;
+    }
+}
+
+function validateCCInput(inputElement) {
+    var val = inputElement.value;
+    // Check if empty OR if it still has the default "XXXX" placeholder
+    if (!val || val === "" || val.toUpperCase() === "XXXX") {
+        inputElement.classList.add("invalid-field");
+        return false;
+    } else {
+        inputElement.classList.remove("invalid-field");
+        return true;
+    }
+}
+
+// Helper to replace default confirm() dialog
+function openConfirm(title, text, confirmBtnText, isDanger) {
+    const dialog = document.getElementById("custom-dialog");
+    const titleEl = document.getElementById("dialog-title");
+    const textEl = document.getElementById("dialog-text");
+    const confirmBtn = document.getElementById("dialog-confirm");
+    const cancelBtn = document.getElementById("dialog-cancel");
+
+    // 1. Setup Content
+    titleEl.textContent = title;
+    textEl.textContent = text;
+    confirmBtn.textContent = confirmBtnText || "Yes";
+
+    // 2. Setup Style (Red button for danger, Blue for normal)
+    if (isDanger) {
+        confirmBtn.classList.add("btn-danger-mode");
+        confirmBtn.classList.remove("btn-primary");
+    } else {
+        confirmBtn.classList.remove("btn-danger-mode");
+        confirmBtn.classList.add("btn-primary");
+    }
+
+    // 3. Show the modal
+    dialog.showModal();
+
+    // 4. Return a Promise that resolves when a button is clicked
+    return new Promise((resolve) => {
+        // "close" event fires when ANY button in the form is clicked
+        dialog.addEventListener("close", () => {
+            // dialog.returnValue comes from the button's 'value' attribute
+            const result = dialog.returnValue === "true"; 
+            resolve(result);
+        }, { once: true }); // Important: ensures listener runs only once per open
+    });
 }
