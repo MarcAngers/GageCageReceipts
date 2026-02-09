@@ -1,7 +1,7 @@
 /* =========================================
    1. GLOBAL RESET & FONTS
    ========================================= */
-   body {
+body {
     background-color: #f4f7f6; /* Modern soft gray, replaces 'azure' */
     color: #333;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Native system fonts load faster */
@@ -193,7 +193,7 @@ input.ledger-value.match { border-bottom-color: #27ae60; }
 
 .camera-icon {
     font-size: 15rem;
-    padding: 8rem;
+    padding: 7rem;
     border: 5px dashed #95a5a6;
     border-radius: 30px;
     margin: 3rem;
@@ -206,7 +206,7 @@ input.ledger-value.match { border-bottom-color: #27ae60; }
 /* I resized these variables to fit mobile screens better */
 :root {
     --brand-success: #5cb85c;
-    --loader-size: 10em; /* Reduced from 20em to 10em */
+    --loader-size: 15em;
     --check-height: calc(var(--loader-size) / 2);
     --check-width: calc(var(--check-height) / 2);
     --check-left: calc(var(--loader-size) / 6 + var(--loader-size) / 12);
@@ -215,7 +215,7 @@ input.ledger-value.match { border-bottom-color: #27ae60; }
 }
 
 .circle-loader {
-    margin: 20px auto; /* Centers it horizontally */
+    margin: 3em auto; /* Centers it horizontally */
     border: 8px solid rgba(0, 0, 0, 0.1);
     border-left-color: var(--check-color);
     animation: loader-spin 1.2s infinite linear;

@@ -19,7 +19,7 @@ window.onload = function() {
         document.getElementById("error-message").classList.add("hidden"); // Hide old error text
 
         if (__DEBUG__) {
-            fetch('./static/testdata-loblaws.json')
+            fetch('./static/testdata-costco.json')
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -67,11 +67,6 @@ window.onload = function() {
                 console.error(error);
                 // Trigger the Red X animation
                 showError("OCR Failed: " + error.message);
-                
-                // Optional: Show the upload button again so they can retry
-                setTimeout(function() {
-                    document.getElementById("receiptfile-container").classList.remove("hidden");
-                }, 2000); 
             });
         }
     });
@@ -447,12 +442,11 @@ function updateCalculatedSum(items) {
         subtotal += amt;
 
         // Check for "Yes" or "H" (handling your specific logic)
-        if (item.flags === "Yes" || item.flags === "H") { 
+        console.log(item.flags);
+        if (item.flags == "Yes" || item.flags.trim() == "H") { 
             tax += amt * 0.13;
         }
     }
-
-    // ... (keep the calculation logic at the top) ...
 
     let sum = subtotal + tax;
 
